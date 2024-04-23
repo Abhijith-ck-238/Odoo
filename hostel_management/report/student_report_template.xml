@@ -1,0 +1,58 @@
+<odoo>
+    <template id="report_student">
+        <t t-call="web.html_container">
+            <t t-set="all_vals" t-value="data['report']"/>
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center">Student Details</h2>
+                    <t t-set="rec" t-value="data['report'][0]"/>
+                    <div>
+                        <t t-if="s_count &lt; 2">
+                            <strong>Student :</strong>
+                            <span t-esc="rec['name']"/>
+                        </t>
+                    </div>
+                    <div>
+                        <t t-if="r_count &lt; 2">
+                            <strong>Room :</strong>
+                            <span t-esc="rec['number']"/>
+                        </t>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>SL.No</th>
+                                <th t-if="s_count > 1">Name</th>
+                                <th>Pending_Amount</th>
+                                <th t-if="r_count > 1">Room</th>
+                                <th>Invoice Status</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <t t-set="i" t-value="1"/>
+                            <tr t-foreach="all_vals" t-as="stt">
+                                <td>
+                                    <span t-esc="i"/>
+                                    <t t-set="i" t-value="i+1"/>
+                                </td>
+                                <td t-if="s_count > 1">
+                                    <span t-esc="stt['name']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="stt['pending_amount']"/>
+                                </td>
+                                <td t-if="r_count > 1">
+                                    <span t-esc="stt['number']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="stt['invoice_status']"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!--        email template for students on each month (scheduled action-->
+        <record id="student_rent_email_template" model="mail.template">
+            <field name="name">hostel:Student Rent Payment</field>
+            <field name="model_id" ref="hostel_management.model_student"/>
+            <field name="email_to">{{object.email}}</field>
+            <field name="subject">Rent payment of {{ object.name }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <t t-if="object.name">
+                            Dear
+                            <span t-out="object.name or ''">,</span>
+                        </t>
+                        <br/>
+                        <br/>
+                        Please check that your rent of<t
+                            t-out="object.roomnum_id.number"/>,of amount
+                        <t t-out="object.monthly_amount"/>
+                        <br/>
+                        Regards,
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

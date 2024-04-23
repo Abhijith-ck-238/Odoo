@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="rangeslider.RangeSliderWidget">
+        <div>
+            <div id="slider">
+                <input id="slid_bar" type="range" min="0"
+                      max="200"
+                       t-on-input = "_sliderinput"
+                       t-ref="inputSlider"
+                />
+                <input id="rangeValue" class="rangeValue" t-ref="sliderValue"/>
+           </div>
+        </div>
+    </t>
+</templates>

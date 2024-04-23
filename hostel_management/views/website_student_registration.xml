@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="request_form">
+        <t t-call="website.layout">
+            <div id="request_form">
+                <div class="container">
+                    <form id="request_form"
+                          action="/registration/create_student/" method="post"
+                          style="padding-top: 50px">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="s_website_form_rows row s_col_no_bgcolor">
+                            <br/>
+                            <div class="form-group col-12 s_website_form_field s_website_form_required">
+                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                    <label class="col-form-label col-sm-auto s_website_form_label"
+                                           style="width: 200px">
+                                        <span class="s_website_form_label_content">
+                                            Your Name
+                                        </span>
+
+                                        <span class="s_website_form_mark">*
+                                        </span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <input type="text"
+                                               class="form-control s_website_form_input"
+                                               name="name"
+                                               required=""/>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div class="form-group col-12 s_website_form_field s_website_form_required"
+                                 data-type="char" data-name="Field">
+                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                    <label class="col-form-label col-sm-auto s_website_form_label"
+                                           style="width: 200px">
+                                        <span class="s_website_form_label_content">
+                                            Email
+                                        </span>
+                                        <span class="s_website_form_mark">*
+                                        </span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <input id="email" type="tel"
+                                               class="form-control s_website_form_input"
+                                               name="email" required=""/>
+                                    </div>
+                                </div>
+                            </div>
+                            <t t-if="user_email_exist">
+                                <div class="form-group col-12 s_website_form_field s_website_form_required"
+                                     data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <span class="alert alert-danger mt16 mb16">
+                                            Looks like student with your email
+                                            already exist...
+                                        </span>
+                                    </div>
+                                </div>
+                            </t>
+                            <br/>
+                            <br/>
+                            <div class="form-group col-12 s_website_form_field s_website_form_required"
+                                 data-type="text" data-name="Field">
+                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                    <label class="col-form-label col-sm-auto s_website_form_label"
+                                           style="width: 200px">
+                                        <span class="s_website_form_label_content">
+                                            Room
+                                        </span>
+                                        <span class="s_website_form_mark">*
+                                        </span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <select name="room_id" id="room_id"
+                                                class="form-control link-style">
+                                            <!--                                                	<option value="">Room...</option>-->
+                                            <t t-foreach="rooms" t-as="room">
+                                                <option t-att-value="room.id">
+                                                    <t t-esc="room.number"
+                                                       t-att-value="room.id"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div class="form-group col-12 s_website_form_field s_website_form_required"
+                                 data-type="char" data-name="Field">
+                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                    <label class="col-form-label col-sm-auto s_website_form_label"
+                                           style="width: 200px">
+                                        <span class="s_website_form_label_content">
+                                            D.O.B
+                                        </span>
+                                        <span class="s_website_form_mark">*
+                                        </span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <input id="dob" type="date"
+                                               class="form-control s_website_form_input"
+                                               name="dob" required=""/>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div class="form-group col-12 s_website_form_submit"
+                                 data-name="Submit Button"
+                                 style="padding-right:50px">
+                                <div style="width: 200px;"
+                                     class="s_website_form_label"/>
+                                <div class="form-group col-12">
+                                    <input type="submit"
+                                           class="btn btn-primary"
+                                           value="Submit"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

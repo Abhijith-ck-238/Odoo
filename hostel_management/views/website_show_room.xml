@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="show_room">
+        <t t-call="website.layout">
+            <div id="show_room">
+                <section class="s_website_form" data-vcss="001"
+                         data-snippet="s_website_form">
+                    <input type="hidden" name="csrf_token"
+                           t-att-value="request.csrf_token()"/>
+                    <div t-attf-style="padding-top:30px;color:#1a1945">
+                        <h1 class="text-center">
+                            <span t-attf-style="color:#05f5b1;font-size:50px"
+                                  t-field="room.number"/>
+                        </h1>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <t t-set="image" t-value="room.image"/>
+                    <div class="row">
+                        <div class="col-lg-6 mt-lg-4 o_wsale_product_images position-relative">
+                            <div class="carousel-item h-100 text-center active">
+                                <div class="position-relative d-inline-flex overflow-hidden m-auto h-100">
+                                    <div class="d-flex align-items-start justify-content-center h-100 oe_unmovable">
+                                        <img class="img img-fluid oe_unmovable product_detail_img mh-100"
+                                             t-att-src="image_data_uri(image)"
+                                             style="height: 350px;width:350px;border-radius:40px"
+                                             alt="Logo"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6 mt-md-4"
+                             t-attf-style="font-family:cursive;font-size: 20px;font-weight: bold;padding-top:20px">
+                            <p>
+                                <span>Type&#160;&#160;&#160;&#160;&#160;:</span>
+                                <span t-field="room.type"/>
+                            </p>
+                            <br/>
+                            <p>
+                                <span>Beds&#160;&#160;&#160;&#160;&#160;:</span>
+                                <span t-field="room.bedno"/>
+                            </p>
+                            <br/>
+                            <p>
+                                <span>
+                                    Facilities&#160;&#160;&#160;&#160;&#160;:
+                                </span>
+                                <t t-foreach="room.facilities_ids"
+                                   t-as="facility">
+                                    <span t-field="facility.name"/>,
+                                </t>
+                            </p>
+                            <br/>
+                            <p>
+                                <span>Rent&#160;&#160;&#160;&#160;&#160;:</span>
+                                <span t-field="room.total_rent"/>
+                            </p>
+                            <br/>
+                            <p>
+                                <span>Per Head&#160;&#160;&#160;&#160;&#160;:
+                                </span>
+                                <span t-field="room.monthly_amount"/>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

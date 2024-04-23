@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.PartnerDetailsEdit" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('partner-details-box')]" position="inside">
+             <div class="partner-detail col">
+                 <label class="form-label"
+                        for="art">Monthly Limit</label>
+                 <input class="form-control" name="limit_amount" t-model="changes.limit_amount" type="text" t-attf-class="o_hex_input {{input_classes}}"
+                        data-color-method="hex" size="1" placeholder="0">
+                 </input>
+                </div>
+       </xpath>
+    </t>
+</template>

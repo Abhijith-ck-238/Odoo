@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- discount for e-commerce products only -->
+    <record id="e_commerce_discount_promotion" model="loyalty.program">
+        <field name="name">Discount for E-commerce</field>
+        <field name="active">False</field>
+        <field name="program_type">promotion</field>
+        <field name="trigger">auto</field>
+        <field name="portal_visible">False</field>
+        <field name="sale_ok">False</field>
+        <field name="portal_point_name">Discount point(s)</field>
+    </record>
+
+    <record id="e_commerce_discount_promotion_rule" model="loyalty.rule">
+        <field name="mode">auto</field>
+        <field name="code">E-commerce discount</field>
+        <field name="reward_point_amount">1</field>
+        <field name="program_id" ref="e_commerce_discount.e_commerce_discount_promotion"/>
+    </record>
+
+    <record id="e_commerce_discount_promotion_reward" model="loyalty.reward">
+        <field name="reward_type">discount</field>
+        <field name="discount">10</field>
+        <field name="required_points">1</field>
+        <field name="discount_mode">percent</field>
+        <field name="description">Special Discount for Online purchase</field>
+        <field name="discount_applicability">order</field>
+        <field name="program_id" ref="e_commerce_discount.e_commerce_discount_promotion"/>
+    </record>
+
+</odoo>

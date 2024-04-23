@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    form view of student report wizard -->
+    <record id="student_report_form_view" model="ir.ui.view">
+        <field name="name">student_report_wizard_form</field>
+        <field name="model">student.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Student Report">
+                <sheet>
+                    <group>
+                        <field name="room_id" options="{'no_create': True}"/>
+                        <field name="student_ids" options="{'no_create': True}" widget="many2many_tags" domain="[('id', 'in', students_ids)]"/>
+                        <field name="students_ids" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button string="PDF" class="btn-primary" type="object"
+                                name="action_report"/>
+                        <button string="XLSX" class="btn-primary" type="object"
+                                name="action_student_xlsx_report"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--        action for file wizard-->
+    <record id="action_student_record" model="ir.actions.act_window">
+        <field name="name">Student Report</field>
+        <field name="res_model">student.report.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="student_report_form_view"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

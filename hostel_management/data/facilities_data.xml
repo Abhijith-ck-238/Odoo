@@ -1,0 +1,17 @@
+<!--facilities data-->
+<odoo>
+    <data>
+        <record id="facilities_data1" model="facilities">
+            <field name="name">Ac</field>
+            <field name="charge">50</field>
+        </record>
+        <record id="facilities_data2" model="facilities">
+            <field name="name">TV</field>
+            <field name="charge">30</field>
+        </record>
+        <record id="facilities_data3" model="facilities">
+            <field name="name">WIFI</field>
+            <field name="charge">35</field>
+        </record>
+    </data>
+</odoo>

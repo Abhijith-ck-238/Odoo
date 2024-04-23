@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add a new setting that can be enabled -->
+    <record id="hostel_management_access_management"
+            model="ir.module.category">
+        <field name="name">Hostel management</field>
+        <field name="description">This will help you manage your access
+        </field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="hostel_warden" model="res.groups">
+        <field name="name">Warden</field>
+        <field name="category_id"
+               ref="hostel_management_access_management"/>
+    </record>
+    <record id="hostel_student" model="res.groups">
+        <field name="name">Student</field>
+        <field name="category_id"
+               ref="hostel_management_access_management"/>
+        <field name="implied_ids" eval="[4, ref('hostel_warden')]"/>
+    </record>
+    <record id="hostel_staff" model="res.groups">
+        <field name="name">Staff</field>
+        <field name="category_id"
+               ref="hostel_management_access_management"/>
+        <field name="implied_ids" eval="[4, ref('hostel_student')]"/>
+    </record>
+
+
+    <!--    record rule for students to see their own student only-->
+    <record id="student_student" model="ir.rule">
+        <field name="name">Student can view their student</field>
+        <field name="model_id" ref="model_student"/>
+        <field name="groups" eval="[(4,ref('hostel_student'))]"/>
+        <field name="domain_force">[('user_id','=',user.id)]
+        </field>
+    </record>
+    <!--    record rule for students to see their own room only-->
+    <record id="student_room" model="ir.rule">
+        <field name="name">Student can view their room</field>
+        <field name="model_id" ref="model_room"/>
+        <field name="groups" eval="[(4,ref('hostel_student'))]"/>
+        <field name="domain_force">[('students.user_id','=',user.id)]
+        </field>
+    </record>
+    <!--    record rule for students to see their own room cleaning request only-->
+    <record id="student_cleaning_service" model="ir.rule">
+        <field name="name">Student can view their room's cleaning request
+        </field>
+        <field name="model_id" ref="model_cleaning_service"/>
+        <field name="groups" eval="[(4,ref('hostel_student'))]"/>
+        <field name="domain_force">[('clean_room.students.user_id','=',user.id)]
+        </field>
+    </record>
+    <!--    record rule for students to see their own room leave request only-->
+    <record id="student_leave_request" model="ir.rule">
+        <field name="name">Student can view their leave request</field>
+        <field name="model_id" ref="model_leave_request"/>
+        <field name="groups" eval="[(4,ref('hostel_student'))]"/>
+        <field name="domain_force">[('student.user_id','=',user.id)]
+        </field>
+    </record>
+    <!--    record rule for staff to see their own clean request-->
+
+    <record id="staff_cleaning_request" model="ir.rule">
+        <field name="name">Staff can view their clean request</field>
+        <field name="model_id" ref="model_cleaning_service"/>
+        <field name="groups" eval="[(4,ref('hostel_staff'))]"/>
+        <field name="domain_force">
+            ['|',('cleaning_staff_id','=',user.id),('cleaning_staff_id','=',False)]
+        </field>
+    </record>
+    <!-- (Record Rules)       this will show only the fields that are
+    created in the current company-->
+    <record id="room_multi_company" model="ir.rule">
+        <field name="name">Hostel Multi-Company</field>
+        <field name="model_id" ref="model_room"/>
+        <field name="domain_force">
+            [('company_id', 'in', company_ids)]
+        </field>
+    </record>
+    <record id="student_id_sequence_multi_company" model="ir.rule">
+        <field name="name">Hostel Multi-Company</field>
+        <field name="model_id" ref="model_student"/>
+        <field name="domain_force">
+            [('company_id', 'in', company_ids)]
+        </field>
+    </record>
+    <record id="facilities_multi_company" model="ir.rule">
+        <field name="name">Hostel Multi-Company</field>
+        <field name="model_id" ref="model_facilities"/>
+        <field name="domain_force">
+            [('company_id', 'in', company_ids)]
+        </field>
+    </record>
+    <record id="leave_request_multi_company" model="ir.rule">
+        <field name="name">Hostel Multi-Company</field>
+        <field name="model_id" ref="model_leave_request"/>
+        <field name="domain_force">
+            [('company_id', 'in', company_ids)]
+        </field>
+    </record>
+    <record id="cleaning_service_multi_company" model="ir.rule">
+        <field name="name">Hostel Multi-Company</field>
+        <field name="model_id" ref="model_cleaning_service"/>
+        <field name="domain_force">
+            [('company_id', 'in', company_ids)]
+        </field>
+    </record>
+</odoo>
+

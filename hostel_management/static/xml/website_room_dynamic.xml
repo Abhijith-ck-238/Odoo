@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template">
+    <t t-name="hostel_management.website_room_dynamic">
+        <div id="course_carousel" class="container carousel slide"
+             data-bs-ride="carousel" t-att-data-bs-interval="interval">
+            <div class="carousel-inner row w-100 mx-auto" role="listbox">
+                <t t-foreach="data" t-as="rooms" t-key="rooms.id">
+                    <div t-att-class="rooms.is_active ? 'carousel-item active' : 'carousel-item'">
+                        <div class="row">
+                            <t t-foreach="rooms" t-as="room"
+                               t-key="room.id">
+                                <div class="block span3 col-3"
+                                     t-attf-style="padding-top:30px">
+                                    <div class="card-group">
+                                        <div class="card"
+                                             t-attf-style="border-style: hidden;">
+                                            <a class="oe_product_image_link d-block h-100 position-relative"
+                                               itemprop="url"
+                                               contenteditable="false"
+                                               t-attf-href="/room/#{room.id}">
+                                                <img class="card-img-top"
+                                                     t-attf-src="data:image-png;base64,{{room.image}}"
+                                                     style="height: 200px;width:220px;border-radius:35px;padding:0px;margin:0px;"
+                                                     alt="Logo"
+                                                />
+                                            </a>
+                                            <div t-attf-style="text-align: center;width:220px">
+                                                <div t-attf-style="font-weight:bold">
+                                                    <span t-attf-style="font-weight:bold"
+                                                          t-esc="room['number']"/>
+                                                </div>
+                                                <div>
+                                                    <span t-attf-style="font-weight:bold"
+                                                          t-esc="room.type"/>
+                                                </div>
+                                                <div t-if="room.available_bed != 0">
+                                                    <span t-attf-style="font-weight:bold"
+                                                          t-esc="room.available_bed"/>
+                                                    <span t-attf-style="font-weight:bold">
+                                                        Beds Available
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span>Price :</span>
+                                                    <span t-esc="room.total_rent"/>
+                                                </div>
+                                                <div t-if="room.available_bed == 0"
+                                                     t-attf-style="background-color:red;font-size:20px;text-shadow: 2px 2px #69302c;border-radius:30px">
+                                                    <span>Unavailable</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a t-attf-href="#course_carousel"
+                                       class="carousel-control-prev"
+                                       data-bs-slide="prev" role="button"
+                                       aria-label="Previous"
+                                       title="Previous">
+                                        <span class="fa fa-chevron-circle-left fa-2x"
+                                              t-attf-style="height:30px;width:30px"/>
+                                        <span class="visually-hidden"
+                                              t-attf-style="height:30px;width:30px">
+                                            Previous
+                                        </span>
+                                    </a>
+                                    <a t-attf-href="#course_carousel"
+                                       class="carousel-control-next"
+                                       data-bs-slide="next" role="button"
+                                       aria-label="Next" title="Next">
+                                        <span class="fa fa-chevron-circle-right fa-2x"/>
+                                        <span class="visually-hidden">Next
+                                        </span>
+                                    </a>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

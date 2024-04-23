@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="ir_cron_stock_report" model="ir.cron">
+        <field name="name">Send Stock Report to Inventory Manager</field>
+        <field name="model_id" ref="model_stock_report"/>
+        <field name="state">code</field>
+        <field name="code">model.send_stock_report_email()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="state">code</field>
+    </record>
+</odoo>

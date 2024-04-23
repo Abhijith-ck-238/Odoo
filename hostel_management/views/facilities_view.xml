@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    action for facilities-->
+    <record id="facilities_action" model="ir.actions.act_window">
+        <field name="name">facility</field>
+        <field name="res_model">facilities</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="facilities_tree_view" model="ir.ui.view">
+        <!--        Tree view for facilities-->
+        <field name="name">Tree</field>
+        <field name="model">facilities</field>
+        <field name="arch" type="xml">
+            <tree string="Channel">
+                <field name="name"/>
+                <field name="charge"/>
+            </tree>
+        </field>
+    </record>
+    <!--    form view for facilities-->
+    <record id="facilities_form_view" model="ir.ui.view">
+        <field name="name">Form</field>
+        <field name="model">facilities</field>
+        <field name="arch" type="xml">
+            <form string="facility_form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="charge"/>
+                        </group>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    search view of facilities-->
+    <record id="facility_search_view" model="ir.ui.view">
+        <field name="name">facility_search_view</field>
+        <field name="model">facilities</field>
+        <field name="arch" type="xml">
+            <search string="facility search">
+                <field name="name" string="Facility"/>
+                <field name="charge" string="Facility rate"/>
+                <filter string="Under 40" name="charge"
+                        domain="[('charge','&lt;=',40)]"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

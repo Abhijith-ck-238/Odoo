@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--    hostel room menu-->
+    <record id="room_action" model="ir.actions.act_window">
+        <field name="name">Rooms</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">room</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_state': 1}</field>
+    </record>
+
+    <!--tree view of hostel rooms-->
+    <record id="room_tree_view" model="ir.ui.view">
+        <field name="name">Tree</field>
+        <field name="model">room</field>
+        <field name="arch" type="xml">
+            <tree string="Channel">
+                <field name="number"/>
+                <field name="type"/>
+                <field name="bedno"/>
+                <field name="rent"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <!--    room menu form-->
+    <record id="room_form_view" model="ir.ui.view">
+        <field name="name">Form</field>
+        <field name="model">room</field>
+        <field name="arch" type="xml">
+            <form string="Description">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button string="Monthly Invoice" type="object"
+                            name="action_monthly_invoice" class="oe_highlight"
+                            groups="hostel_management.hostel_warden"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="number"/>
+                        </h1>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="bedno"/>
+                            <field name="facilities_ids" widget="many2many_tags"/>
+                            <field name="occupied_bedno"/>
+                            <field name="available_bed"/>
+                        </group>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="currency_id"/>
+                            <field name="rent" widget="monetary"/>
+                            <field name="total_rent" widget="monetary"/>
+                            <field name="pending_amount"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Students">
+                            <field name="students"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--    search area, filters and groups-->
+    <record id="room_search_view" model="ir.ui.view">
+        <field name="name">room_search_view</field>
+        <field name="model">room</field>
+        <field name="arch" type="xml">
+            <search string="name">
+                <field name="number" string="Room"/>
+                <field name="type" string="Room type"/>
+                <field name="rent" string="Rend price"/>
+                <field name="facilities_ids" string="Facility"/>
+                <filter string="Available" name="state"
+                        domain="[('state','in', ('empty', 'partial'))]"/>
+                <filter string="Bed Count" name="bedno"
+                        context="{'group_by':'bedno'}"/>
+                <filter string="Facilities" name="facilities_ids"
+                        context="{'group_by':'facilities_ids'}"/>
+            </search>
+        </field>
+    </record>
+</odoo>

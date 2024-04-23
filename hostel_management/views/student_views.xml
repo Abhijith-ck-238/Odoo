@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    students menu-->
+    <record id="student_action" model="ir.actions.act_window">
+        <field name="name">students</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">student</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!--    tree view of student model-->
+    <record id="student_tree_view" model="ir.ui.view">
+        <field name="name">Tree</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <tree string="Channel">
+                <field name="name"/>
+                <field name="sid"/>
+                <field name="roomnum_id"/>
+                <field name="d_o_b"/>
+                <field name="email"/>
+                <field name="receive_email"/>
+            </tree>
+        </field>
+    </record>
+    <!--    student menu form view-->
+    <record id="student_form_view" model="ir.ui.view">
+        <field name="name">Form</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <form string="stdform">
+                <header>
+                    <field name="invoice_status" widget="statusbar"/>
+                    <button string="Alot Room" class="oe_highlight"
+                            type="object" name="action_alot_room"
+                            invisible="roomnum_id_count != 0 or active in [False]"/>
+                    <button string="Vacate" type="object"
+                            name="action_vacate_student"
+                            invisible="active in [False] or roomnum_id_count != 1"
+                    />
+                    <button string="Unarchive" type="object"
+                            name="action_unarchive_student"
+                            invisible="active in [True]"/>
+                </header>
+
+                <sheet>
+                    <div name="button_box" position="inside">
+                    <button type="object" class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                            name="action_invoices">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="invoice_count"/>
+                            </span>
+                            <span class="o_stat_text">Invoiced</span>
+                        </div>
+                    </button>
+                </div>
+
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sid"/>
+                        </h1>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                            <field name="d_o_b"/>
+                            <field name="age"/>
+                            <field name="pending_amount" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="pending_amount"/>
+                            <field name="roomnum_id"/>
+                            <field name="roomnum_id_count" invisible="1"/>
+                            <field name="monthly_amount"/>
+                            <field name="email" widget="email"/>
+                            <field name="receive_email"/>
+                            <field name="company_id"/>
+                            <field name="leave_request_ids" invisible="1"/>
+                        </group>
+
+                    </group>
+
+                    <notebook>
+                        <page string="Address">
+                            <group>
+                                <field name="street" placeholder="street"/>
+                                <field name="street2" placeholder="street2"/>
+                                <field name="city" placeholder="City"/>
+                                <field name="country_id" placeholder="country"/>
+                                <field name="state_id" placeholder="state"/>
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="student_search_view" model="ir.ui.view">
+        <field name="name">student_search_view</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <search string="name">
+                <field name="name" string="student"/>
+                <field name="sid" string="student ID"/>
+                <field name="roomnum_id" string="room number"/>
+                <filter string="Archived" name="inactive"
+                        domain="[('active','=',not set)]"/>
+                <filter string="Room" name="roomnum_id"
+                        context="{'group_by':'roomnum_id'}"/>
+            </search>
+        </field>
+    </record>
+</odoo>

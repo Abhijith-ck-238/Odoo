@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="website_stock_availability_ribbon"
+              inherit_id="website_sale.products_item">
+        <xpath expr="//a[hasclass('oe_product_image_link')]" position="inside">
+            <t t-if="product.qty_available &lt; 5 and product.detailed_type in ['consu', 'product']">
+                <t t-if="product.qty_available == 0">
+                    <span t-attf-class="o_ribbon o_not_editable text-bg-danger o_ribbon_left">
+                        Stock Out
+                    </span>
+                </t>
+                <t t-else="">
+                    <span t-attf-class="o_ribbon o_not_editable text-bg-warning o_ribbon_left">
+                        Limited Quantity
+                    </span>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

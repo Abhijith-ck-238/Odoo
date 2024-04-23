@@ -1,0 +1,14 @@
+<!--inherit sale order view and add a button-->
+<odoo>
+    <record id="view_sale_order_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherited</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_quotation_send']" position="after">
+                <button string="import lines" type="object"
+                        name="action_sale_order_import_lines"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

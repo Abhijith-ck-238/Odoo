@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="basic_feature_snippet" name="Feature">
+        <section class="oe-structure container">
+            <div class="col-12 row m-auto">
+                <section class="card col-3 m-auto" style="margin-top:30px">
+                    <div class="row">
+                        <img src="session_snippet/static/src/img/room5.jpeg"/>
+                    </div>
+                </section>
+                <section class="card col-3 m-auto" style="margin-top:30px">
+                    <div class="row">
+                        <img src="session_snippet/static/src/img/room1.jpeg"/>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </template>
+    <template id="external_snippet" inherit_id="website.snippets">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]" position="inside">
+            <t t-snippet="session_snippet.basic_feature_snippet" t-thumbnail="session_snippet/static/src/img/room5.jpeg"/>
+        </xpath>
+    </template>
+    <template id="external_snippets" inherit_id="website.snippets">
+        <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]" position="inside">
+            <t t-snippet="session_snippet.basic_feature_snippet" t-thumbnail="session_snippet/static/src/img/room5.jpeg"/>
+        </xpath>
+    </template>
+
+    <template id="basic_inner_snippet" name="inner">
+        <div class="s_text_highlight">
+            <h1>yeaahhh.....</h1>
+        </div>
+    </template>
+
+    <template id="external_content" inherit_id="website.snippets">
+        <xpath expr="//div[@id='snippet_content']/div[hasclass('o_panel_body')]" position="inside">
+            <t t-snippet="session_snippet.basic_inner_snippet" t-thumbnail="session_snippet/static/src/img/room5.jpeg"/>
+        </xpath>
+    </template>
+
+    <template name="Dynamic" id="snippet_dynamic">
+        <section class="oe-structure container-fluid js-dynamic_snippet">
+            <div class="col-12 row m-auto">
+                <h1 class="">Total sold></h1>
+                <div id="prod_snip"/>
+            </div>
+        </section>
+    </template>
+
+</odoo>
+

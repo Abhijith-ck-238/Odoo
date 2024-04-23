@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="bom_structure_in_mo" model="ir.ui.view">
+        <field name="name">bom.structure.in.mo</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_reception_report']"
+                   position="after">
+                <button name="action_bom_overview" type="object"
+                        class="oe_stat_button" icon="fa-bars">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">BoM Overview</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

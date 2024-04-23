@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_discount"
+            model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id = 'discount_sale_order_lines']"
+                   position="after">
+                <setting id="ecommerce_discount"
+                         string="Set E-commerce discount">
+                    <field name="is_e_commerce_discount"/>
+                    <div class="row mt8 ms-4"
+                         invisible="not is_e_commerce_discount">
+                        <field name="e_commerce_discount"
+                               style="width: 6rem"/></div>
+                    <field name="is_e_commerce_discount_change"
+                           invisible="True"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    form view of leave request report wizard-->
+    <record id="leave_request_report_wizard_form_view" model="ir.ui.view">
+        <field name="name">leave_request_report_wizard_form_view</field>
+        <field name="model">leave.request.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="leave Request Report">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="room_id" options="{'no_create': True}"/>
+                            <field name="student_ids" options="{'no_create': True}" widget="many2many_tags" domain="[('id','in', students_ids)]"/>
+                            <field name="students_ids" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="start_date" options="{'no_create': True}"/>
+                            <field name="arrival_date" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="PDf" class="btn-primary" type="object"
+                                name="action_leave_request_report"/>
+                        <button string="XLSX" class="btn-primary" type="object"
+                                name="action_leave_request_xlsx_report"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    action for wizard-->
+    <record id="action_leave_request_report" model="ir.actions.act_window">
+        <field name="name">Leave Request Report</field>
+        <field name="res_model">leave.request.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="leave_request_report_wizard_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

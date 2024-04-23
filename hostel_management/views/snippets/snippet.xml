@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="room_dynamic_snippet" name="Room Snippet">
+        <section class="container dynamic_room_snippet">
+                <h1 class="text-center"
+                    t-attf-style="color:#7874b5; font-family: sans-serif; font-size: 55PX">
+                    Choose Your Room
+                </h1>
+            <div id="crsl"/>
+        </section>
+    </template>
+
+    <template id="room_snippets" inherit_id="website.snippets" priority="5">
+        <xpath expr="//div[@id='snippet_effect']//t[@t-snippet][last()]"
+               position="after">
+            <t t-snippet="hostel_management.room_dynamic_snippet"
+               t-thumbnail="hostel_management/static/src/image/room7.jpeg"/>
+        </xpath>
+    </template>
+</odoo>

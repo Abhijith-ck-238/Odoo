@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+<!--    action for menu 'home'-->
+    <record id="day_wise_attendance_action" model="ir.actions.act_window">
+        <field name="name">day wise attendance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">day.wise.attendance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_ab_date_s':1}</field>
+    </record>
+
+<!--   day_wise_attendance tree view -->
+    <record id="day_wise_attendance_tree_view" model="ir.ui.view">
+        <field name="name">tree</field>
+        <field name="model">day.wise.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="channel">
+                <field name="employee_id"/>
+                <field name="ab_date"/>
+            </tree>
+        </field>
+    </record>
+<!--    day_wise_attendance form view-->
+    <record id="day_wise_attendance_form_view" model="ir.ui.view">
+        <field name="name">Absentees form</field>
+        <field name="model">day.wise.attendance</field>
+        <field name="arch" type="xml">
+            <form string="absentees form">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="ab_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+<!--    search view of absentees-->
+    <record id="day_wise_attendance_search_view" model="ir.ui.view">
+        <field name="name">day.wise.attendance.search.view</field>
+        <field name="model">day.wise.attendance</field>
+        <field name="arch" type="xml">
+            <search string="search daily absentees">
+                <filter name="ab_date" string="Today"
+                        domain="[('ab_date','=',(context_today()))]"/>
+                <filter name="ab_date_s" string="Date" domain="[]"
+                        context="{'group_by':'ab_date:day'}"/>
+            </search>
+        </field>
+    </record>
+</odoo>
+

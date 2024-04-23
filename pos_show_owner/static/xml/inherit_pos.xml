@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+       <xpath expr="//ul[hasclass('info-list')]" position="before">
+           <t t-if="line.owner_id">
+                <div>
+                    <span>Owner: </span>
+                    <t t-esc="line.owner_id[1]"/>
+                </div>
+           </t>
+       </xpath>
+    </t>
+</templates>

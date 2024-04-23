@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="clear_cart" inherit_id="website_sale.total">
+        <xpath expr="//div[@id='cart_total']" position="after">
+            <div class="clear_cart_div" style="display:block">
+                <br/>
+            <button name="website_sale_main_button"
+               class=" btn btn-primary  w-100 js_clear_cart" href="#">
+                Clear Cart
+            </button>
+            </div>
+        </xpath>
+    </template>
+</odoo>

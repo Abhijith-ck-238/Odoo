@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="room_form">
+        <t t-call="website.layout">
+            <div id="room_form">
+                <div id="credit_carousel" class="container carousel slide"
+                     data-bs-ride="carousel" t-att-data-bs-interval="interval">
+                    <div class="carousel-inner row w-100 mx-auto"
+                         role="listbox">
+                        <h1 class="text-center"
+                            t-attf-style="color:#7874b5; font-family: sans-serif; font-size: 55PX">
+                            Choose Your Room
+                        </h1>
+                        <div class="row">
+                            <t t-foreach="rooms" t-as="room">
+                                <t t-set="image" t-value="room.image"/>
+                                <div class="block span3 col-3"
+                                     t-attf-style="padding-top:30px">
+                                    <div class="card-group">
+                                        <div class="card"
+                                             t-attf-style="border-style: hidden;">
+                                            <a class="oe_product_image_link d-block h-100 position-relative"
+                                               itemprop="url"
+                                               contenteditable="false"
+                                               t-attf-href="/room/#{room.id}">
+                                                <img class="img img-fluid oe_unmovable product_detail_img mh-100"
+                                                     t-att-src="image_data_uri(image)"
+                                                     style="height: 200px;width:220px;border-radius:35px"
+                                                     alt="Logo"
+                                                />
+                                            </a>
+                                            <div t-attf-style="text-align: center;width:220px">
+                                                <div t-attf-style="font-weight:bold">
+                                                    <span t-attf-style="font-weight:bold"
+                                                          t-field="room.number"/>
+                                                </div>
+                                                <div>
+                                                    <span t-attf-style="font-weight:bold"
+                                                          t-field="room.type"/>
+                                                </div>
+                                                <div t-if="room.available_bed != 0">
+                                                    <span t-attf-style="font-weight:bold"
+                                                          t-field="room.available_bed"/>
+                                                    <span t-attf-style="font-weight:bold">
+                                                        Beds Available
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span>Price :</span>
+                                                    <span t-field="room.total_rent"/>
+                                                </div>
+                                                <div t-if="room.available_bed == 0"
+                                                     t-attf-style="background-color:red;font-size:20px;text-shadow: 2px 2px #69302c;border-radius:30px">
+                                                    <span>Unavailable</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+<!--    root menu-->
+    <menuitem id="attendance_menu_root" name="Absentees">
+<!--        sub menu-->
+            <menuitem id="attendance_absentees_sub"
+                      name="Home"
+                      action="day_wise_attendance_action"/>
+    </menuitem>
+</odoo>

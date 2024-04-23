@@ -1,0 +1,386 @@
+from odoo import fields, models, api
+from odoo.exceptions import UserError
+import io
+import json
+import xlsxwriter
+from odoo.tools import date_utils
+
+
+class StudentWizard(models.TransientModel):
+    """class for student report wizard"""
+    _name = "student.report.wizard"
+    _description = "wizard for printing student report"
+
+    room_id = fields.Many2one("room",
+                              string="Room",
+                              )
+    student_ids = fields.Many2many("student",
+                                   string="Student"
+                                   )
+    students_ids = fields.Many2many("student",
+                                    string="students_ids",
+                                    compute="_compute_students_ids")
+
+    @api.depends('room_id')
+    def _compute_students_ids(self):
+        for rec in self:
+            rec.students_ids = rec.env['student'].search([])
+            if rec.room_id:
+                st = rec.room_id.students
+                rec.students_ids = st
+
+    def action_report(self):
+        """method for creating query of our needs in pdf and print it"""
+        query = """select s.name,s.pending_amount,r.number,s.invoice_status,s.id
+                           from student as s
+                           inner join room as r on r.id = s.roomnum_id
+                           where True"""
+        if self.room_id:
+            query += (""" and r.number = '%s'""" % self.room_id.number)
+        if self.student_ids:
+            sid = tuple(self.student_ids.ids)
+            if len(sid) == 1:
+                query += (""" and s.id = %s""" % str(sid[0]))
+            elif len(sid) != 0:
+                query += (""" and s.id in %s""" % str(sid))
+        self.env.cr.execute(query)
+        report = self.env.cr.dictfetchall()
+        std = []
+        s_count = 0
+        rm = []
+        r_count = 0
+        for stud in report:
+            student = stud['name']
+            room = stud['number']
+            if room not in rm:
+                rm.append(room)
+            if student not in std:
+                std.append(student)
+        if len(std) > 0:
+            s_count = len(std)
+            if len(rm) > 0:
+                r_count = len(rm)
+        data = {'report': report,
+                's_count': s_count,
+                'r_count': r_count}
+        docids = self.student_ids.ids
+        if len(data['report']) > 0:
+            return (self.env.ref('hostel_management.action_student_report')
+                    .report_action(docids, data))
+        else:
+            raise UserError("No data to Print")
+
+    def action_student_xlsx_report(self):
+        """method for creating query of our needs in pdf and print it"""
+        query = """select s.name,s.pending_amount,r.number,s.invoice_status,s.id
+                                   from student as s
+                                   inner join room as r on r.id = s.roomnum_id
+                                   where True"""
+        if self.room_id:
+            query += (""" and r.number = '%s'""" % self.room_id.number)
+        if self.student_ids:
+            sid = tuple(self.student_ids.ids)
+            if len(sid) == 1:
+                query += (""" and s.id = %s""" % str(sid[0]))
+            elif len(sid) != 0:
+                query += (""" and s.id in %s""" % str(sid))
+        self.env.cr.execute(query)
+        report = self.env.cr.dictfetchall()
+        std, rm = [], []
+        s_count, r_count = 0, 0
+        for stud in report:
+            student = stud['name']
+            room = stud['number']
+            if room not in rm:
+                rm.append(room)
+            if student not in std:
+                std.append(student)
+        if len(std) > 0:
+            s_count = len(std)
+            if len(rm) > 0:
+                r_count = len(rm)
+        # print("room...", rm)
+        data = {'report': report,
+                's_count': s_count,
+                'r_count': r_count,
+                'rm': rm,
+                "company": self.env.user.company_id.name}
+        if len(data['report']) > 0:
+            return {
+                'type': 'ir.actions.report',
+                'data': {'model': 'student.report.wizard',
+                         'options': json.dumps(data,
+                                               default=date_utils.json_default),
+                         'output_format': 'xlsx',
+                         'report_name': 'Student Excel Report',
+                         },
+                'report_type': 'xlsx',
+            }
+
+    def get_xlsx_report(self, data, response):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        sheet = workbook.add_worksheet()
+        cell_format = workbook.add_format(
+            {'font_size': '12px', 'align': 'center', 'bg_color': 'ACA8A8',
+             'border': 1})
+        head = workbook.add_format(
+            {'align': 'center', 'bold': True, 'font_size': '20px',
+             'bg_color': '#F7F7F7', 'font_name': 'Times New Roman'})
+        heading_b = workbook.add_format(
+            {'font_size': '10px', 'align': 'left', 'bold': True
+             })
+        txt = workbook.add_format(
+            {'font_size': '10px', 'align': 'center', 'border': 1})
+        room_count = data.get('r_count', False)
+        student_count = data.get('s_count', False)
+        rooms = data.get('rm', False)
+        C, D, E = 'C', 'D', 'E'
+        if student_count <= 1:
+            C, D, E = 'B', 'C', 'D'
+            if room_count <= 1:
+                C, E = 'B', 'C'
+        elif room_count <= 1:
+            E = 'D'
+
+        sheet.merge_range('A1:E2', 'Student Report', head)
+        sheet.set_column('A:E', 18)
+        student = data['report'][0]
+        sheet.write('D5', 'Company :')
+        sheet.write('E5', data.get('company'))
+
+        # start loop from here
+        row = 6
+        for room in rooms:
+            print("rooms",room)
+            if student_count <= 1:
+                sheet.write(f'A{row}', 'Student :', heading_b)  # row=6
+                sheet.write(f'B{row}', student['name'], heading_b)
+            # if room_count <= 1:
+            sheet.write(f'A{row + 1}', 'Room :', heading_b)
+            sheet.write(f'B{row + 1}', student['number'], heading_b)
+            sheet.write(f'A{row + 4}', 'SL.NO', cell_format)
+            if student_count > 1:
+                sheet.write(f'B{row + 4}', 'Name', cell_format)
+            sheet.write(f'{C}{row + 4}', 'Pending Amount', cell_format)
+            if room_count > 1:
+                sheet.write(f'{D}{row + 4}', 'Room', cell_format)
+            sheet.write(f'{E}{row + 4}', 'Invoice Status', cell_format)
+
+            i = row + 5
+            for rec in data['report']:  # Start at row 16 for students
+                # if room == rec['number']:
+                print(room)
+                sheet.write(f'A{i}', i - 10, txt)
+                if student_count > 1:
+                    sheet.write(f'B{i}', rec['name'], txt)
+                sheet.write(f'{C}{i}', rec['pending_amount'], txt)
+                if room_count > 1:
+                    sheet.write(f'{D}{i}', rec['number'], txt)
+                sheet.write(f'{E}{i}', rec.get('invoice_status', False),
+                            txt)
+                i += 1
+            row += (i - 10)
+
+        workbook.close()
+        output.seek(0)
+        response.stream.write(output.read())
+        output.close()
+
+
+
+22222222222222222222222222222222222222222222222222222222222222222222222222222222
+
+from odoo import fields, models, api
+from odoo.exceptions import UserError
+import io
+import json
+import xlsxwriter
+from odoo.tools import date_utils
+
+
+class StudentWizard(models.TransientModel):
+    """class for student report wizard"""
+    _name = "student.report.wizard"
+    _description = "wizard for printing student report"
+
+    room_id = fields.Many2one("room",
+                              string="Room",
+                              )
+    student_ids = fields.Many2many("student",
+                                   string="Student"
+                                   )
+    students_ids = fields.Many2many("student",
+                                    string="students_ids",
+                                    compute="_compute_students_ids")
+
+    @api.depends('room_id')
+    def _compute_students_ids(self):
+        for rec in self:
+            rec.students_ids = rec.env['student'].search([])
+            if rec.room_id:
+                st = rec.room_id.students
+                rec.students_ids = st
+
+    def action_report(self):
+        """method for creating query of our needs in pdf and print it"""
+        query = """select s.name,s.pending_amount,r.number,s.invoice_status,s.id
+                           from student as s
+                           inner join room as r on r.id = s.roomnum_id
+                           where True"""
+        if self.room_id:
+            query += (""" and r.number = '%s'""" % self.room_id.number)
+        if self.student_ids:
+            sid = tuple(self.student_ids.ids)
+            if len(sid) == 1:
+                query += (""" and s.id = %s""" % str(sid[0]))
+            elif len(sid) != 0:
+                query += (""" and s.id in %s""" % str(sid))
+        self.env.cr.execute(query)
+        report = self.env.cr.dictfetchall()
+        std = []
+        s_count = 0
+        rm = []
+        r_count = 0
+        for stud in report:
+            student = stud['name']
+            room = stud['number']
+            if room not in rm:
+                rm.append(room)
+            if student not in std:
+                std.append(student)
+        if len(std) > 0:
+            s_count = len(std)
+            if len(rm) > 0:
+                r_count = len(rm)
+        data = {'report': report,
+                's_count': s_count,
+                'r_count': r_count}
+        docids = self.student_ids.ids
+        if len(data['report']) > 0:
+            return (self.env.ref('hostel_management.action_student_report')
+                    .report_action(docids, data))
+        else:
+            raise UserError("No data to Print")
+
+    def action_student_xlsx_report(self):
+        """method for creating query of our needs in pdf and print it"""
+        query = """select s.name,s.pending_amount,r.number,s.invoice_status,s.id
+                                   from student as s
+                                   inner join room as r on r.id = s.roomnum_id
+                                   where True"""
+        if self.room_id:
+            query += (""" and r.number = '%s'""" % self.room_id.number)
+        if self.student_ids:
+            sid = tuple(self.student_ids.ids)
+            if len(sid) == 1:
+                query += (""" and s.id = %s""" % str(sid[0]))
+            elif len(sid) != 0:
+                query += (""" and s.id in %s""" % str(sid))
+        self.env.cr.execute(query)
+        report = self.env.cr.dictfetchall()
+        std, rm = [], []
+        s_count, r_count = 0, 0
+        for stud in report:
+            student = stud['name']
+            room = stud['number']
+            if room not in rm:
+                rm.append(room)
+            if student not in std:
+                std.append(student)
+        if len(std) > 0:
+            s_count = len(std)
+            if len(rm) > 0:
+                r_count = len(rm)
+        data = {'report': report,
+                's_count': s_count,
+                'r_count': r_count,
+                'room': rm,
+                "company": self.env.user.company_id.name}
+        if len(data.get('report', False)) > 0:
+            return {
+                'type': 'ir.actions.report',
+                'data': {'model': 'student.report.wizard',
+                         'options': json.dumps(data,
+                                               default=date_utils.json_default),
+                         'output_format': 'xlsx',
+                         'report_name': 'Student Excel Report',
+                         },
+                'report_type': 'xlsx',
+            }
+
+    def get_xlsx_report(self, data, response):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        sheet = workbook.add_worksheet()
+        cell_format = workbook.add_format(
+            {'font_size': '12px', 'align': 'center', 'bg_color': 'ACA8A8',
+             'border': 1})
+        head = workbook.add_format(
+            {'align': 'center', 'bold': True, 'font_size': '20px',
+             'bg_color': '#F7F7F7', 'font_name': 'Times New Roman'})
+        heading_b = workbook.add_format(
+            {'font_size': '12px', 'align': 'left', 'bold': True
+             })
+        room_font = workbook.add_format(
+            {'font_size': '12px', 'align': 'center', 'bold': True
+             })
+        txt = workbook.add_format(
+            {'font_size': '10px', 'align': 'center', 'border': 1})
+        room_count = data.get('r_count', False)
+        student_count = data.get('s_count', False)
+        C, D, E = 'C', 'D', 'E'
+        if student_count <= 1:
+            C, D, E = 'B', 'C', 'D'
+            if room_count <= 1:
+                C, E = 'B', 'C'
+        elif room_count <= 1:
+            E = 'D'
+
+        sheet.merge_range('A1:D2', 'Student Report', head)
+        sheet.set_column('A:E', 18)
+        student = data['report'][0]
+        sheet.merge_range('C4:4', f'Company : {data.get("company")}',
+                          heading_b)
+
+        row = 6
+        rooms = data.get('room', False)
+        for room in rooms:
+            row1, row2, row3, = 6, row + 1, row + 4
+            # heading
+            if student_count <= 1:
+                sheet.write(f'A{row1}', 'Student :', heading_b)
+                sheet.write(f'B{row1}', student['name'], heading_b)
+            # if room_count <= 1:
+            #     sheet.write(f'A{row2}', 'Room :', heading_b)
+            #     sheet.write(f'B{row2}', student['number'], heading_b)
+            # Table heading
+            sheet.write(f'A{row3}', 'SL.NO', cell_format)
+            if student_count > 1:
+                sheet.write(f'B{row3}', 'Name', cell_format)
+            sheet.write(f'{C}{row3}', 'Pending Amount', cell_format)
+            # if room_count > 1:
+            #     sheet.write(f'{D}{row3}', 'Room', cell_format)
+            sheet.write(f'{D}{row3}', 'Invoice Status', cell_format)
+            i = row3 + 1
+            # student details
+            for rec in data.get('report', False):
+                if rec.get('number') == room:
+                    sheet.merge_range(f'B{row2}:C{row2}', f'Room : {room}',
+                                      room_font)
+                    # sheet.write(f'B{row2}', room, heading_b)
+                    sheet.write(f'A{i}', i - row3, txt)
+                    if student_count > 1:
+                        sheet.write(f'B{i}', rec['name'], txt)
+                    sheet.write(f'{C}{i}', rec['pending_amount'], txt)
+                    # if room_count > 1:
+                    #     sheet.write(f'{D}{i}', rec['number'], txt)
+                    sheet.write(f'{D}{i}', rec.get('invoice_status', False),
+                                txt)
+                    i += 1
+                    row = i + 1
+
+        workbook.close()
+        output.seek(0)
+        response.stream.write(output.read())
+        output.close()

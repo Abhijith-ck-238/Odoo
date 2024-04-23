@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--    default service product for room rent-->
+<odoo>
+    <data>
+        <record id="room_rent_product11" model="product.template">
+            <field name="name">Rent</field>
+            <field name="standard_price">100</field>
+            <field name="detailed_type">service</field>
+        </record>
+    </data>
+</odoo>

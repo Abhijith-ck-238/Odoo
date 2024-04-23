@@ -1,0 +1,25 @@
+<!--inherit sale order view and add button 'Create Project' and add a field 'Milestone in the sale order line'-->
+<odoo>
+    <record id="sale_order_inherited_btn_fld" model="ir.ui.view">
+        <field name="name">sale order inherited button and Field</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_cancel']" position="after">
+                <button string="Create Project" type="object"
+                        name="action_project_creation"
+                        invisible="project_count != 0"/>
+                <button string="Update Project"
+                        type="object"
+                        name="action_project_update"
+                invisible="project_count == 0"/>
+                <field name="project_count" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']//tree//field[@name='tax_id']"
+                   position="after">
+                <field name="milestone"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

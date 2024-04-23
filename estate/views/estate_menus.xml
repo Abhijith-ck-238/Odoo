@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem id="real_menu_root" name="Real estate">
+        <menuitem id="real_home_menu" name="Home">
+            <menuitem id="real_property_menu" name="Properties" action="real_home"/>
+        </menuitem>
+        <menuitem id="real_setting_menu" name="Setting">
+            <menuitem id="real_property_type_menu" name="Property type" action="real_propertytype"/>
+        </menuitem>
+    </menuitem>
+</odoo>

@@ -1,0 +1,77 @@
+<odoo>
+    <template id="report_leave_request">
+        <t t-call="web.html_container">
+            <t t-set="all_vals" t-value="data['report']"/>
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center">Students Leave Request Report</h2>
+                    <t t-set="rec" t-value="data['report'][0]"/>
+                    <div>
+                        <t t-if="s_count &lt; 2">
+                            <strong>Student :</strong>
+                            <span t-esc="rec['name']"/>
+                        </t>
+                    </div>
+                    <div>
+                        <t t-if="r_count &lt; 2">
+                            <strong>Room :</strong>
+                            <span t-esc="rec['number']"/>
+                        </t>
+                    </div>
+                    <div>
+                        <t t-if="ld_count &lt; 2">
+                            <strong>Start Date :</strong>
+                            <span t-esc="rec['l_date']"/>
+                        </t>
+                    </div>
+                    <div>
+                        <t t-if="ad_count &lt; 2">
+                            <strong>Arrival Date :</strong>
+                            <span t-esc="rec['a_date']"/>
+                        </t>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>SL.No</th>
+                                <t t-if="s_count > 1">
+                                    <th>Student</th>
+                                </t>
+                                <t t-if="r_count > 1">
+                                    <th>Room</th>
+                                </t>
+                                <th>Start Date</th>
+                                <th>Arrival date</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="i" t-value="1"/>
+                            <tr t-foreach="all_vals" t-as="lr">
+                                <td>
+                                    <span t-esc="i"/>
+                                    <t t-set="i" t-value="i+1"/>
+                                </td>
+                                <td t-if="s_count > 1">
+                                    <span t-esc="lr['name']"/>
+                                </td>
+                                <td t-if="r_count > 1">
+                                    <span t-esc="lr['number']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="lr['l_date']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="lr['a_date']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="lr['duration']"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

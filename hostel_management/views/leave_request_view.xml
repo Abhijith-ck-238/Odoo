@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    action for leave request model-->
+    <record id="leave_request_action" model="ir.actions.act_window">
+        <field name="name">Leave Request</field>
+        <field name="res_model">leave.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--    tree view for leave request-->
+    <record id="leave_request_tree_view" model="ir.ui.view">
+        <field name="name">Tree</field>
+        <field name="model">leave.request</field>
+        <field name="arch" type="xml">
+            <tree string="Channel">
+                <field name="student"/>
+                <field name="l_date"/>
+                <field name="a_date"/>
+                <field name="room_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--   form view for leave request -->
+    <record id="leave_request_form_view" model="ir.ui.view">
+        <field name="name">form</field>
+        <field name="model">leave.request</field>
+        <field name="arch" type="xml">
+            <form string="leavereq form">
+                <header>
+                    <field name="status" widget="statusbar"/>
+                    <button string="Cancel"
+                            type="object" name="action_cancel"
+                            invisible="status == 'new'"/>
+                    <button string="Approve" class="oe_highlight"
+                            type="object" name="action_approve"
+                            invisible="status == 'approved'"
+                            groups="hostel_management.hostel_warden"
+                    />
+
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="student"/>
+                        </group>
+                        <group>
+                            <field name="l_date"/>
+                            <field name="a_date"/>
+                            <field name="duration"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+<!--    search view for leave request model-->
+    <record id="leave_request_search_view" model="ir.ui.view">
+        <field name="name">leave_request_search_view</field>
+        <field name="model">leave.request</field>
+        <field name="arch" type="xml">
+            <search string="leave request_search">
+                <field name="student" string="student"/>
+                <filter string="Student" name="student"
+                        context="{'group_by':'student'}"/>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="session_snippet.dynamic_snippet_custom">
+        <div class="">
+
+
+        </div>
+    </t>
+</template>
